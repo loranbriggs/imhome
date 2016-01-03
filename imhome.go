@@ -6,7 +6,7 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprint(w, "Hello Go Webserver")
+    fmt.Fprint(w, "Hello from Raspberry Pi")
 }
 
 func main() {
