@@ -9,15 +9,24 @@ import (
 
 var users = map[string]string{}
 
-func handler(w http.ResponseWriter, r *http.Request) {
-    ip := strings.Split(r.RemoteAddr, ":")[0]
-    users[ip] = ip
+func rootHandler(w http.ResponseWriter, r *http.Request) {
+    ip := lookupIp(r)
+    _, returning := users[ip] // check map for visitor
+    if returning {
+        http.Redirect(w, r, "/home", http.StatusFound)
+    }
+    http.Redirect(w, r, "/new", http.StatusFound)
+}
+
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+    ip := lookupIp(r)
+    name := users[ip]
 
     data := struct {
         User string
         Users map[string]string
     } {
-        ip,
+        name,
         users,
     }
 
@@ -26,12 +35,26 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func newHandler(w http.ResponseWriter, r *http.Request) {
+    t, _ := template.ParseFiles("views/new.html")
+    t.Execute(w, users)
+}
 
+func saveHandler(w http.ResponseWriter, r *http.Request) {
+    ip := lookupIp(r)
+    name := r.FormValue("name")
+    users[ip] = name
+    http.Redirect(w, r, "/", http.StatusFound)
+}
+
+func lookupIp(r *http.Request) string {
+    return strings.Split(r.RemoteAddr, ":")[0]
 }
 
 func main() {
-    http.HandleFunc("/", handler)
+    http.HandleFunc("/", rootHandler)
+    http.HandleFunc("/home", homeHandler)
     http.HandleFunc("/new", newHandler)
+    http.HandleFunc("/save", saveHandler)
     fmt.Println("listing at http://localhost:8080/")
     http.ListenAndServe(":8080", nil)
 }

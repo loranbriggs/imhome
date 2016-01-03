@@ -1,5 +1,9 @@
-<h1>Welcome home {{.User}}</h1>
+<h1>Welcome home {{.User}}.</h1>
 
 <h3>Who's Home:</h3>
-{{.Users}}
+<ul>
+    {{ range $key, $value := .Users }}
+    <li>{{ $value }}</li>
+    {{ end }}
+</ul>
 
