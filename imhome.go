@@ -3,10 +3,15 @@ package main
 import (
     "fmt"
     "net/http"
+    "strings"
 )
 
+var users = map[string]string{}
+
 func handler(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprint(w, "Hello from Raspberry Pi")
+    ip := strings.Split(r.RemoteAddr, ":")[0]
+    users[ip] = ip
+    fmt.Fprint(w, users)
 }
 
 func main() {
