@@ -2,6 +2,7 @@ package main
 
 import (
     "fmt"
+    "github.com/loranbriggs/w1thermsensor"
     "html/template"
     "net/http"
     "strings"
@@ -25,9 +26,11 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
     data := struct {
         User string
         Users map[string]string
+        Temperature string
     } {
         name,
         users,
+        w1thermsensor.Temperatrue(),
     }
 
     t, _ := template.ParseFiles("views/home.html")

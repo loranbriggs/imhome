@@ -1,5 +1,7 @@
 <h1>Welcome home {{.User}}.</h1>
 
+<h2>It is currently {{.Temperature}}f inside your home.</h2>
+
 <h3>Who's Home:</h3>
 <ul>
     {{ range $key, $value := .Users }}
